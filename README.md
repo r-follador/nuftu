@@ -12,8 +12,8 @@ over [Infura](https://www.infura.io/), minting
 a [Nuftu token](https://etherscan.io/token/0x61a17d56fc6548bfd114be130ae2cc74d69ecd33),
 while taking care of gas fees etc.
 
-The tag line is basically: "**Nuftu is simple: upload your digital artwork and pay the fee in USD - your NFT is ready!
-**"
+The tag line is basically: **Nuftu is simple: upload your digital artwork and pay the fee in USD - your NFT is ready!
+**
 
 ![Screenshot](nuftu_screenshot1.png)
 
