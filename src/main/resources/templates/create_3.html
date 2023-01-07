@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      lang="en">
+
+<head th:replace="index.html :: headerfiles"></head>
+<body>
+<header th:replace="index.html :: header">
+</header>
+
+<script src="/assets/js/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+        integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg=="
+        crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://media.payrexx.com/modal/v1/modal.min.js"></script>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="index.html :: navigation(field='create')" id="sidebarMenu"
+             class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h1">Create your NFT</h1>
+            </div>
+
+            <div class="alert alert-warning" role="alert" th:if="${errorpaying}"
+                 th:text="${errorpayingmessage}">Payment error
+            </div>
+
+            <div th:if="${newkeycreated}">
+                <div class="card" style="width: 40rem;">
+                    <div class="card-header">
+                        Your private Key <span class="badge bg-danger">Top secret</span>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" th:text="${privatekey}">An item</li>
+                    </ul>
+                    <div id="qrcode"></div>
+                </div>
+
+                <div class="alert alert-danger mt-2" role="alert" style="width: 40rem;">
+                    <img width="20px" src="/assets/img/warning.svg">
+                    This key will grant access to your NFT on the Ethereum blockchain.<br>
+                    Make sure to save it in a safe place and share only with people you trust.<br>
+                    <strong>Print it out, store it in a safe place.</strong>
+                </div>
+
+                <div class="card" style="width: 40rem;">
+                    <div class="card-header">
+                        Your address
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" th:text="${address}">An item</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div th:unless="${newkeycreated}">
+                <div class="card" style="width: 40rem;">
+                    <div class="card-header">
+                        Supplied address
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" th:text="${address}">An item</li>
+                    </ul>
+                </div>
+
+                <div class="alert alert-danger" role="alert">
+                    Make sure that you have full control of the above address, this will be the only way to
+                    trade/sell/delete your NFT.
+                </div>
+
+            </div>
+
+            <p></p>
+            <div id="buttonsToHide">
+                <a class="btn btn-secondary" href="create?action=discard" id="discardButton">Discard</a>
+                <a class="btn btn-success" href="create?action=mint" id="confirmButton" th:if="${not errorpaying}">Confirm
+                    and Pay</a>
+                <a class="btn btn-success" href="create?action=mint" id="confirmButton" th:if="${errorpaying}">Retry</a>
+            </div>
+
+            <div id="spinnerToShow" style="display:none">
+                <button class="btn btn-primary" type="button" disabled>
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Redirecting for payment
+                </button>
+            </div>
+
+
+        </main>
+    </div>
+</div>
+
+
+</body>
+
+<script>
+    var button = document.getElementById('confirmButton')
+    button.addEventListener('click', hideshow, false);
+
+    function hideshow() {
+        document.getElementById('buttonsToHide').style.display = 'none';
+        document.getElementById('spinnerToShow').style.display = 'block';
+
+        setTimeout(function () {
+            window.location.reload(1);
+        }, 5000);
+    }
+
+    var qrcode = new QRCode("qrcode");
+    qrcode.makeCode("[[${privatekey}]]");
+</script>
+
+</html>

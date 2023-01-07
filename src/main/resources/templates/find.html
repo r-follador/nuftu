@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      lang="en">
+
+<head th:replace="index.html :: header"></head>
+<body>
+<header th:replace="index.html :: headerfiles">
+</header>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="index.html :: navigation(field='find')" id="sidebarMenu"
+             class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h1">Gallery</h1>
+            </div>
+
+            <div th:each="token: ${tokens}" class="card mb-3" style="max-width: 540px;">
+                <div class="row g-0">
+                    <div th:if="${#strings.startsWith(token.getMediatype(),'image')}" class="col-md-6">
+                        <a th:href="'/nft/'+${token.getTokennumber()}">
+                            <img class="img-fluid" th:src="'/api/thumbnail/'+${token.getTokennumber()}">
+                        </a>
+                    </div>
+                    <div th:if="${#strings.startsWith(token.getMediatype(),'audio')}" class="col-md-6">
+                        <a th:href="'/nft/'+${token.getTokennumber()}">
+                            <img class="img-fluid" th:src="'/api/thumbnail/'+${token.getTokennumber()}">
+                        </a>
+                    </div>
+                    <div th:if="${#strings.startsWith(token.getMediatype(),'video')}" class="col-md-6">
+                        <video class="img-fluid" autoplay muted loop>
+                            <source th:src="'/api/thumbnail/'+${token.getTokennumber()}"
+                                    th:type="${token.getMediatype()}">
+                        </video>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card-body">
+                            <h5 class="card-title" th:text="${token.getName()}">NFT name</h5>
+                            <p class="card-text" th:text="${token.getDescription()}">NFT text</p>
+                            <a th:href="'/nft/'+${token.getTokennumber()}" class="btn btn-primary">View NFT</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </main>
+    </div>
+</div>
+</body>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GV36YE0WSV"></script>
+<script th:unless="${#arrays.contains(@environment.getActiveProfiles(),'dev')}">
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-GV36YE0WSV');
+</script>
+
+</html>

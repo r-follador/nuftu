@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      lang="en">
+
+<head th:replace="index.html :: header"></head>
+<body>
+<header th:replace="index.html :: headerfiles">
+</header>
+
+<script th:src="@{/webjars/vue/vue.js}"></script>
+<script th:src="@{/webjars/axios/dist/axios.js}"></script>
+
+
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="index.html :: navigation(field='error')" id="sidebarMenu"
+             class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h1">Error</h1>
+            </div>
+            <h2 th:text="${errormessage}">Error message</h2>
+
+            <p th:text="${errormessagedetail}">Error message</p>
+        </main>
+    </div>
+</div>
+</body>
+
+<script>
+</script>
+
+</html>

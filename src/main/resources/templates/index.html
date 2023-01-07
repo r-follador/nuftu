@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      lang="en">
+
+<head th:fragment="headerfiles">
+    <title>Nuftu</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <link href="/assets/css/dashboard.css" rel="stylesheet">
+    <link rel="icon"
+          type="image/svg"
+          href="/assets/img/logo.svg">
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+    <meta property="og:image" content="https://nuftu.com/assets/img/logo.svg"/>
+    <meta property="og:title" content="Nuftu.com"/>
+    <meta property="og:description" content="Mint your NFT with Nuftu"/>
+    <meta property="og:site_name" content=“Nuftu.com“/>
+    <meta property="og:type" content="website"/>
+</head>
+<body>
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="chevron-right" viewBox="0 0 16 16">
+        <path fill-rule="evenodd"
+              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/>
+    </symbol>
+
+</svg>
+
+
+<header th:fragment="header" class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+    <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="/index">
+        <img src="/assets/img/logo.svg" width="40" height="40" class="d-inline-block align-middle" alt="">
+        <strong>Nuftu</strong></a>
+    <div th:if="${#arrays.contains(@environment.getActiveProfiles(),'rinkeby')}">
+        <h4>
+            <div class="badge bg-warning text-dark">Testnet</div>
+        </h4>
+    </div>
+    <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse"
+            data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false"
+            aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</header>
+
+<div class="container-fluid">
+    <div th:with="field='home'" class="row">
+        <nav th:fragment="navigation (field)" id="sidebarMenu"
+             class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+            <div class="position-sticky pt-3">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="../index"
+                           th:classappend="${field=='home' ? 'active' : ''}">
+                            <span data-feather="home"></span>
+                            Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../create" th:classappend="${field=='create' ? 'active' : ''}">
+                            <span data-feather="file"></span>
+                            <strong>Create your NFT</strong> <img src="/assets/img/nuftu_deco2.svg" width="20px">
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../find" th:classappend="${field=='find' ? 'active' : ''}">
+                            <span data-feather="file"></span>
+                            Gallery
+                        </a>
+                    </li>
+                </ul>
+
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span>Learn more</span>
+                    <a class="link-secondary" href="#" aria-label="Add a new report">
+                        <span data-feather="plus-circle"></span>
+                    </a>
+                </h6>
+                <ul class="nav flex-column mb-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../how_it_works"
+                           th:classappend="${field=='how_it_works' ? 'active' : ''}">
+                            <span data-feather="file"></span>
+                            How it works
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../how_to_sell"
+                           th:classappend="${field=='how_to_sell' ? 'active' : ''}">
+                            <span data-feather="file"></span>
+                            How to sell your NFT
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="../pricing" th:classappend="${field=='pricing' ? 'active' : ''}">
+                            <span data-feather="file"></span>
+                            Pricing
+                        </a>
+                    </li>
+                </ul>
+                <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                    <span></span>
+                    <a class="link-secondary" href="#" aria-label="Add a new report">
+                        <span data-feather="plus-circle"></span>
+                    </a>
+                </h6>
+                <ul class="nav flex-column mb-2">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../tos" th:classappend="${field=='tos' ? 'active' : ''}">
+                            <span data-feather="file"></span>
+                            Terms of Service
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mailto:contact@nuftu.com">
+                            <span data-feather="file"></span>
+                            Contact &amp; Support
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+            <div class="container col-xxl-8 px-4 py-0">
+                <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+                    <div class="col-10 col-sm-8 col-lg-6">
+                        <img src="/assets/img/logo.svg" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes"
+                             loading="lazy" width="700" height="500">
+                    </div>
+                    <div class="col-lg-6">
+                        <h1 class="display-5 fw-bold lh-1 mb-3">Mint your NFT with <span
+                                style="color: #d63384">Nuftu</span></h1>
+                        <p class="lead">Become part of the world's top crypto artists. Mint and publish your art on the
+                            Ethereum blockchain with only a few clicks.</p>
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+                            <a href="/create" class="btn btn-primary btn-lg px-4 me-md-2">Get Started</a>
+                            <a href="/how_it_works" class="btn btn-outline-secondary btn-lg px-4">Learn more</a>
+                            <a href="/find" class="btn btn-outline-secondary btn-lg px-4">Gallery</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-4 py-0 row-cols-1 row-cols-lg-3">
+                <div class="feature col">
+                    <h2><img src="/assets/img/nuftu_deco1.svg" width="30px"> Simple NFT minting</h2>
+                    <p>Nuftu handles the complexity of NFT minting. Don't worry about Ether prices, gas costs etc. <br>All
+                        for a flat fee.</p>
+                    <a href="/how_it_works" class="icon-link">
+                        Find out how it works
+                        <svg class="bi" width="1em" height="1em">
+                            <use xlink:href="#chevron-right"></use>
+                        </svg>
+                    </a>
+                </div>
+                <div class="feature col">
+                    <h2><img src="/assets/img/nuftu_deco2.svg" width="30px">Official Ethereum NFTs</h2>
+                    <p>Nuftu mints official Ethereum compliant ERC721 tokens. Use popular trading platforms to promote,
+                        sell and trade your NFT.<br>
+                        You have complete control over your NFT.</p>
+                    <a href="/how_to_sell" class="icon-link">
+                        How to sell your NFT
+                        <svg class="bi" width="1em" height="1em">
+                            <use xlink:href="#chevron-right"></use>
+                        </svg>
+                    </a>
+                </div>
+                <div class="feature col">
+                    <h2><img src="/assets/img/nuftu_deco3.svg" width="30px">Fair pricing</h2>
+                    <p>A fair price is automatically calculated to reflect the current Ethereum blockchain costs.<br>
+                        No need to buy Ethereum, you pay in USD using your credit card.</p>
+                    <a href="/pricing" class="icon-link">
+                        Check Pricing
+                        <svg class="bi" width="1em" height="1em">
+                            <use xlink:href="#chevron-right"></use>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+
+</body>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GV36YE0WSV"></script>
+<script th:unless="${#arrays.contains(@environment.getActiveProfiles(),'dev')}">
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'G-GV36YE0WSV');
+</script>
+
+</html>

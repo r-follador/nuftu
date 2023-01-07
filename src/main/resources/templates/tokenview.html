@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      lang="en">
+
+<head>
+    <title>Nuftu</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <script th:src="@{/webjars/bootstrap/js/bootstrap.bundle.min.js}"></script>
+    <link href="/assets/css/dashboard.css" rel="stylesheet">
+    <link rel="icon"
+          type="image/svg"
+          href="/assets/img/logo.svg">
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+    <meta property="og:image" th:content="'https://nuftu.com/api/thumbnail/'+${token}"/>
+    <meta property="og:title" th:content="'Nuftu NFT: '+${name}"/>
+    <meta property="og:description" th:content="${description}"/>
+    <meta property="og:url" th:content="'https://nuftu.com/nft/'+${token}"/>
+    <meta property="og:site_name" content=“Nuftu.com“/>
+    <meta property="og:type" content="website"/>
+</head>
+<body>
+<header th:replace="index.html :: header">
+</header>
+
+<script th:src="@{/webjars/vue/vue.js}"></script>
+<script th:src="@{/webjars/axios/dist/axios.js}"></script>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="index.html :: navigation (field='tokenview')" id="sidebarMenu"
+             class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h1">NFT Viewer</h1>
+            </div>
+
+            <div class="card" style="width: 800px">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${name}">Name</h5>
+                    <h6 class="card-subtitle mb-2 text-muted" th:text="'File type: '+${mimetype}">File type</h6>
+                    <h6 class="card-subtitle mb-2 text-muted" th:text="'SHA256 Hash: '+${sha256}">Sha256 Hash</h6>
+                    <p class="card-text" th:text="${description}">Description</p>
+
+                    <div th:if="${#strings.startsWith(mimetype,'image')}">
+                        <img class="img-fluid text-center" style="cursor: pointer;" th:src="'/api/file/'+${token}"
+                             data-bs-toggle="modal" data-bs-target="#imageModal">
+                    </div>
+
+                    <div th:if="${#strings.startsWith(mimetype,'application/pdf')}">
+                        <embed th:src="'/api/file/'+${token}" class="img-fluid"
+                               type="application/pdf">
+                    </div>
+
+                    <div th:if="${#strings.startsWith(mimetype,'video')}">
+                        <video controls width="500" autoplay muted>
+                            <source th:src="'/api/file/'+${token}" th:type="${mimetype}" class="img-fluid">
+                        </video>
+                    </div>
+
+                    <div th:if="${#strings.startsWith(mimetype,'audio')}">
+                        <audio class="img-fluid" controls
+                               th:src="'/api/file/'+${token}">
+                        </audio>
+                    </div>
+                </div>
+
+                <div class="card-header">
+                    Creator address
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" th:text="${creator}">An item</li>
+                </ul>
+                <div class="card-header">
+                    Current owner
+                </div>
+                <ul class="list-group list-group-flush">
+                    <div class="list-group-item" id="app">{{info}}</div>
+                </ul>
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col">NFT Address</div>
+                        <div class="col">Token number</div>
+                    </div>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col" th:text="${contractaddress}">bla</div>
+                            <div class="col" th:text="${token}">bla</div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <div class="row mt-3">View NFT on:</div>
+            <div class="row">
+                <div class="col">
+                    <a th:href="${outlink_etherscan}" target="_blank" class="align-middle"><img width="100"
+                                                                                                src="/assets/img/outlink_etherscan.png"></a>
+                    <a th:href="${outlink_opensea}" target="_blank" class="align-middle"><img width="100"
+                                                                                              src="/assets/img/outlink_opensea.png"></a>
+                    <a th:href="${outlink_rarible}" target="_blank" class="align-middle"><img width="100"
+                                                                                              src="/assets/img/outlink_rarible.png"></a>
+                </div>
+            </div>
+
+            <div class="row mt-3">Share on:</div>
+            <div class="row">
+                <div class="col mb-5">
+                    <a th:href="'https://www.facebook.com/sharer/sharer.php?u=https://nuftu.com/nft/'+${token}"
+                       type="button" class="btn btn-secondary btn-sm">Facebook</a>
+                    <a th:href="'https://twitter.com/share?hashtags=NFT,Nuftu&text=Check out this NFT: https://nuftu.com/nft/'+${token}+'&via=Nuftu'"
+                       type="button" class="btn btn-secondary btn-sm">Twitter</a>
+                </div>
+            </div>
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-xl">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="imageModalLabel" th:text="${name}">NFT Name</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <img class="img-fluid" th:src="'/api/file/'+${token}">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </main>
+    </div>
+</div>
+</body>
+
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                info: null,
+                loading: true,
+                errored: false
+            }
+        },
+        mounted() {
+            var tokenid = "[[${token}]]";
+            axios
+                .get('/eth/' + tokenid)
+                .then(response => {
+                    if (response.data.error) {
+                        this.errored = true
+                    } else
+                        this.info = response.data.address
+                })
+                .catch(error => {
+                    this.errored = true
+                    this.info = "Cannot load data"
+                })
+                .finally(() => this.loading = false)
+        }
+    })
+</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GV36YE0WSV"></script>
+<script th:unless="${#arrays.contains(@environment.getActiveProfiles(),'dev')}">
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-GV36YE0WSV');
+</script>
+</html>

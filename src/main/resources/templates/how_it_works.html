@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      lang="en">
+
+<head th:replace="index.html :: header"></head>
+<body>
+<header th:replace="index.html :: headerfiles">
+</header>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="index.html :: navigation(field='how_it_works')" id="sidebarMenu"
+             class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h1">How <span style="color: #d63384">Nuftu</span> works</h1>
+            </div>
+
+            <img src="/assets/img/001.svg" class="col-5 float-end">
+
+            <h3>Nuftu helps you <strong>mint your own NFT</strong> in three simple steps</h3>
+
+            <div class="container mt-3">
+                <div class="row">
+                    <div class="col-1">
+                        <div class="d-flex rounded-circle bg-info align-items-center justify-content-center"
+                             style="width: 30px; height: 30px">
+                            1
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h5>Upload your Digital Artwork</h5>
+                        <p>Upload your artwork (picture, drawings, movies, audio) to Nuftu.<br>
+                            Come up with a catchy name and description.</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-1">
+                        <div class="d-flex rounded-circle bg-info align-items-center justify-content-center"
+                             style="width: 30px; height: 30px">
+                            2
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h5>Create your Ethereum address</h5>
+                        <p>Nuftu will either create a new Ethereum address for you or (should you already
+                            have one) use an existing address.<br>
+                            Nuftu will charge you a flat fee that includes all the costs to mint an NFT on
+                            the Ethereum chain.</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-1">
+                        <div class="d-flex rounded-circle bg-info align-items-center justify-content-center"
+                             style="width: 30px; height: 30px">
+                            3
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <h5>Mint your NFT</h5>
+                        <p>Your NFT will be minted on the Ethereum block chain. Nuftu will take care of all
+                            the details.<br>
+                            After minting you can print out all the details, including the address of your
+                            token, your private key etc.</p>
+                    </div>
+                </div>
+                <div class="row mb-4">
+                    <div class="col-3">
+                        <a href="/create" class="btn btn-primary btn-lg px-4 me-md-2">Get Started</a>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="mt-3">What's an NFT?</h3>
+            <p>
+                In short, NFTs (<i>non-fungible tokens</i>) are a proof of ownership of a digital asset (a video, a
+                picture, etc.).<br>
+                A link to the asset and it's owner are irreversibly stored on a blockchain. The allure of the blockchain
+                is that everyone can access the information on it and check who the asset belongs to, and trace back
+                the history of its owners. But no one can change this information and cheat the rightful owner of her
+                property.
+            </p>
+            <p>There is a lot of information out there going into more details on what NFTs are and why they are so
+                popular. <a href="https://www.theverge.com/22310188/nft-explainer-what-is-blockchain-crypto-art-faq"
+                            target="_blank">Verge has an
+                    entertaining article on the subject.</a></p>
+
+            <h3 class="mt-3">What does 'minting' an NFT mean?</h3>
+            <p>
+                Minting is the act of publishing your NFT on the blockchain. The information of your NFT (the owner, the
+                token number, the link to the digital data etc.) is transferred onto the blockchain where Ethereum
+                miners will verify
+                the data and add it to a new block of the ever growing blockchain.<br>
+                The information will be stored forever on the blockchain and cannot be deleted or modified later on.
+            </p>
+            <p>
+                The work done by the miners costs quite a lot of computer power. The miners get paid in Ether
+                (the official Ethereum currency) for their work.<br>
+                The calculation of the cost is quite complex and depends on the available mining power, the amount of
+                work
+                requested (what's called <i>gas cost</i> and <i>gas prices</i>) and the current Ether conversion rate.
+            </p>
+            <p>
+                This is where Nuftu comes in: we take care of all of the details and work out a fair flat fee to mint
+                your token.<br>
+                You can concentrate on the art and become a crypto artist with ease.
+            </p>
+
+            <h3 class="mt-3">So who actually owns an NFT?</h3>
+            <p>Every NFT, once it's minted, belongs to an owner. The owner is defined by a public Ethereum address. <br>
+                An address on the blockchain is similar to a username, it's calculated automatically
+                and essentially consists of random looking letters and numbers.<br>
+                The address is public, so everyone can look up to which address an NFT belongs to.
+            </p>
+            <p>The private key, on the other hand, is the password used to access your address. As with every password,
+                make sure to keep it secret.<br>
+                Equally important: Unlike your password to your email account, you cannot change the private key. And
+                since nobody else
+                knows your private key, once you lose it, you lose access to your NFT.</p>
+            <p>This means: make sure to keep your private key secret and store it in a safe place.</p>
+            <p>Nuftu will by default generate a new address and private key for you and assign this address as the
+                owner.<br>
+                If you already have a private key or you want to directly send your NFT to someone else, you can use
+                this address
+                and assign it as the owner.</p>
+
+            <h3 class="mt-3">And what can I do with my NFT?</h3>
+            <p>
+                Once you have minted your NFT, you are the official owner. The owner's Ethereum address is publicly
+                visible and is proof that you indeed hold control over the NFT.
+            </p>
+            <p>
+                Only the owner can transfer the NFT to someone else. That means you (and only you) can sell, auction or
+                trade your NFT
+                to someone else. <a href="/how_to_sell">Find out more on how to sell your NFT</a>.
+            </p>
+
+            <h3 class="mt-3">Tips and Tricks</h3>
+            <p>
+            <ul>
+                <li>Make your Artwork stand out. Make it unique. Make it interesting.<br>
+                    Crypto art is no different from physical art. People want to be surprised. People want to see
+                    artistic skill and creativity.
+                </li>
+                <li>Connect your Artwork to your persona.<br>
+                    NFT fans want to connect to the artist. Interact with your fans, create a persona, showcase your NFT
+                    on your social network.
+                </li>
+                <li>Make use of the Medium.<br>
+                    Nuftu allows you to upload different types of file formats, such as still images, animated images
+                    and movies, audio files.
+                    Be creative and embrace the possibilities.
+                </li>
+            </ul>
+            </p>
+
+        </main>
+    </div>
+</div>
+</body>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GV36YE0WSV"></script>
+<script th:unless="${#arrays.contains(@environment.getActiveProfiles(),'dev')}">
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-GV36YE0WSV');
+</script>
+
+</html>

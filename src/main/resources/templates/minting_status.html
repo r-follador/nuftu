@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      lang="en">
+
+<head th:replace="index.html :: headerfiles"></head>
+<body>
+<header th:replace="index.html :: header">
+</header>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="index.html :: navigation(field='create')" id="sidebarMenu"
+             class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h1">Minting your NFT</h1>
+            </div>
+
+            <div class="alert alert-info" role="alert">Payment successful!
+            </div>
+
+            <div class="alert alert-warning" role="alert" th:if="${errorminting}"
+                 th:text="${errormintingmessage}">Minting error
+            </div>
+            <div th:if="${errorminting}">Support: <a href="mailto:contact@nuftu.com">contact@nuftu.com</a></div>
+
+            <div th:unless="${errorminting}">
+                <h3>Your NFT is being minted...</h3>
+                <p>This can take several minutes, depending on blockchain traffic.</p>
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Please check
+                back in a minute.
+                <p></p><img src="/assets/img/copper-loader.gif"/>
+            </div>
+        </main>
+    </div>
+</div>
+</body>
+
+<script>
+    setTimeout(function () {
+        window.location.reload(1);
+    }, 10000);
+</script>
+</html>

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      lang="en">
+
+<head th:replace="index.html :: header"></head>
+<body>
+<header th:replace="index.html :: headerfiles">
+</header>
+
+<script th:src="@{/webjars/vue/vue.min.js}"></script>
+<script th:src="@{/webjars/axios/dist/axios.js}"></script>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="index.html :: navigation(field='pricing')" id="sidebarMenu"
+             class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" id="app">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h1">Pricing</h1>
+            </div>
+            <img src="/assets/img/003.svg" class="col-5 float-end">
+
+            <div class="col-4">
+                <div class="card mb-4 rounded-3 shadow-sm">
+                    <div class="card-header py-3">
+                        <h4 class="my-0 fw-normal">NFT minting</h4>
+                    </div>
+                    <div class="card-body">
+                        <h1 class="card-title pricing-card-title" v-if="validPrice">{{cost}}<small
+                                class="text-muted fw-light"> USD</small></h1>
+                        <h1 class="card-title pricing-card-title" v-else>
+                            <del>{{cost}}<small class="text-muted fw-light"> USD</small></del>
+                        </h1>
+                        <ul class="list-unstyled mt-3 mb-4">
+                            <li>Last update: {{update}}</li>
+                        </ul>
+                        <div class="alert alert-warning" role="alert" v-if="!validPrice">The Ethereum blockchain is
+                            currently too busy resulting in unusually high fees.<br>We recommend to try later.
+                        </div>
+                        <a href="/create" type="button" class="w-100 btn btn-lg btn-outline-primary">Get Started</a>
+                    </div>
+                </div>
+
+
+                <div class="alert alert-warning" role="alert" v-if="errored">We're not able to retrieve this information
+                    at the moment, please try back later
+                </div>
+            </div>
+            <h2>How are prices calculated?</h2>
+            <p>The price for minting an NFT is primarily depending on how busy the Ethereum network currently is. This
+                drives what's called '<i>gas prices</i>'. The Ethereum exchange rate matters much less in this case.<br>
+                Gas prices can vary wildly within a day. Prices are updated every 10 minutes to give you the best
+                conditions available.</p>
+            <p>In addition to the Ethereum costs, Nuftu adds a service charge (usually around 10-20%) to take care of
+                the interaction and to store the metadata on its servers.</p>
+
+            <h2>Why does Nuftu sometimes disable minting?</h2>
+            <p>If the price is unusually high due to a lot of traffic on the Ethereum blockchain, Nuftu temporarily
+                disables NFT minting to protect you from paying too much.<br>
+                In this case just check back in an hour or so.</p>
+
+            <h2>Can I get a refund if I change my mind?</h2>
+            <p>This is unfortunately not possible.<br>
+                Information once added to the blockchain cannot be
+                revoked. This in turn means that the minting cost are committed and can't be canceled or reversed.</p>
+
+            <h2>Why does minting cost anything at all?</h2>
+            <p>The information of your NFT (the owner, the token number, the link to the digital data etc.) is
+                transferred onto the blockchain where Ethereum miners will verify the data and add it to a new block of
+                the ever growing blockchain.</p>
+            <p>The work done by the miners costs a lot of computer power and heavy investments in hardware. The miners
+                get paid in Ether (the
+                official Ethereum currency) for their work.<br>
+                The calculation of the cost is quite complex and depends on the available mining power, the amount of
+                work requested (what's called gas cost and gas prices) and the current Ether conversion rate. </p>
+        </main>
+    </div>
+</div>
+</body>
+
+<script>
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                cost: null,
+                update: null,
+                validPrice: true,
+                loading: true,
+                errored: false
+            }
+        },
+        create() {
+            this.timer = setInterval(this.fetchEventsList, 300000);
+        },
+        methods: {
+            getData: function () {
+                axios
+                    .get('/mintingcost')
+                    .then(response => {
+                        this.cost = response.data.mintingCost;
+                        this.update = new Date(response.data.lastUpdate).toLocaleTimeString();
+                        this.validPrice = response.data.valid;
+                    })
+                    .catch(error => {
+                        this.errored = true
+                        this.cost = "Cannot load data"
+                    })
+                    .finally(() => this.loading = false)
+            }
+        },
+        mounted() {
+            this.getData();
+            this.timer = setInterval(this.getData, 60000);
+        }
+    })
+</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GV36YE0WSV"></script>
+<script th:unless="${#arrays.contains(@environment.getActiveProfiles(),'dev')}">
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-GV36YE0WSV');
+</script>
+
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      lang="en">
+
+<head th:replace="index.html :: header"></head>
+<head>
+    <style>
+        .drop-area {
+            border: 2px dashed #ccc;
+            border-radius: 20px;
+            width: 480px;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body onload="onLoad()">
+<header th:replace="index.html :: headerfiles">
+</header>
+
+<script th:src="@{/webjars/vue/vue.min.js}"></script>
+<script th:src="@{/webjars/axios/dist/axios.js}"></script>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="index.html :: navigation(field='create')" id="sidebarMenu"
+             class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h1"><img src="/assets/img/nuftu_deco2.svg" width="30px"> Create your NFT</h1>
+            </div>
+
+            <div class="card mb-3" id="metamasksuggestion">
+                <div class="card-body">
+                    <i>Before you start:</i><br>
+                    Nuftu recommends to install MetaMask. MetaMask is a free tool to manage your Ethereum accounts and
+                    private keys (consider it a password manager for the Ethereum Universe).
+                    <br><a class="btn btn-secondary btn-sm mt-1" href="https://metamask.io/" target="_blank"> <img
+                        width="20px" src="/assets/img/outlink_metamask.svg"> Install MetaMask</a>
+                </div>
+            </div>
+
+            <div class="card mb-0 rounded-3 shadow-sm col-3" id="app">
+                <div class="card-header py-3">
+                    <h5 class="my-0 fw-normal">Current pricing </h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="card-title pricing-card-title">{{cost}}<small
+                            class="text-muted fw-light"> USD</small></h3>
+                    <ul class="list-unstyled mt-3 mb-0">
+                        <li>Last update: {{update}} <a href="/pricing" target="_blank" type="button"
+                                                       class="badge rounded-pill bg-primary">Learn more</a></li>
+                    </ul>
+                    <div class="alert alert-warning" role="alert" v-if="!validPrice">The Ethereum blockchain is
+                        currently too busy resulting in unusually high fees.<br>We recommend to try later.
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-3">
+                <div class="d-flex">
+                    <h3>Describe your asset</h3>
+                </div>
+            </div>
+
+            <form action="#" th:action="@{/create}" th:object="${uploadAsset}" enctype="multipart/form-data"
+                  method="post" class="needs-validation" id="uploadform">
+
+                <div class="input-group row">
+                    <div class="input-group-prepend col-2">
+                        <span class="input-group-text">Title</span>
+                    </div>
+                    <input type="text" class="form-control" th:field="*{name}" name="name"
+                           placeholder="A short and catchy title for your NFT"
+                           aria-describedby="basic-addon3" required>
+                </div>
+                <div class="alert alert-warning" role="alert" th:if="${#fields.hasErrors('description')}"
+                     th:errors="*{description}">Description Error
+                </div>
+
+                <div class="alert alert-warning" role="alert" th:if="${#fields.hasErrors('name')}"
+                     th:errors="*{name}">Name Error
+                </div>
+
+                <div class="input-group row mt-2">
+                    <div class="input-group-prepend col-2">
+                        <span class="input-group-text">Description</span>
+                    </div>
+                    <textarea form="uploadform" name="description" th:field="*{description}" class="form-control"
+                              aria-label="Description"
+                              placeholder="Describe your artwork in an interesting way. Include information about you, the artist."
+                              required></textarea>
+                </div>
+                <div class="alert alert-warning" role="alert" th:if="${#fields.hasErrors('description')}"
+                     th:errors="*{description}">Description Error
+                </div>
+
+                <div class="row mt-4">
+                    <div class="d-flex">
+                        <h3>Upload your asset</h3>
+                    </div>
+                </div>
+                <div>
+                    <div id="drop_zone" class="drop-area" ondrop="dropHandler(event);"
+                         ondragover="dragOverHandler(event);" onclick="dropclick()">
+                        <input form="uploadform" type="file" th:field="*{file}" class="custom-file-input"
+                               name="file" id="uploadfile" required>
+                        <p>Click or drag a file</p>
+                    </div>
+
+                    <button type="button" class="btn btn-link" data-bs-toggle="modal"
+                            data-bs-target="#exampleModal">
+                        Supported File types
+                    </button>
+                </div>
+                <div class="alert alert-warning" role="alert" th:if="${#fields.hasErrors('file')}"
+                     th:errors="*{file}">File error
+                </div>
+
+                <div class="row mt-4">
+                    <div class="d-flex">
+                        <h3>Who will be the Owner of your NFT?</h3>
+                        <a tabindex="0" class="link-info p-1" role="button" data-bs-toggle="popover"
+                           data-bs-trigger="focus" data-bs-html="true" data-bs-placement="right"
+                           title="NFT owner"
+                           data-bs-content="The NFT is owned by an account (address) on the Ethereum blockchain. Only this account can transfer (e.g. by selling or auctioning) the NFT to the next owner.">What's
+                            this?</a>
+                    </div>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="radioNewAddress"
+                           onclick="existingEtherAddress();" checked>
+                    <label class="form-check-label" for="radioNewAddress">
+                        Create a <strong>new Ethereum address</strong>
+                    </label>
+                </div>
+                <div id="useNewAddress" class="ms-3" style="display: block">
+                    <p>Nuftu will create a new Ethereum address (including the private key) for you.
+                        <a tabindex="0" class="link-info" role="button" data-bs-toggle="popover"
+                           data-bs-trigger="focus" data-bs-html="true" data-bs-placement="right"
+                           title="Ethereum address and private key"
+                           data-bs-content="An Ethereum <i>address</i> is similar to a user name on a website. It identifies an account on the Ethereum blockchain.<br>A <i>private key</i> is similar to a password for your account. Only you know the password and it enables you to access your account.<br>In contrast to a password for other websites, a private key is automatically generated and consists of random characters.">What's
+                            this?</a><br>
+                        <i>This is the recommended option if you're new to NFTs.</i>
+                    </p>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="flexRadioDefault"
+                           onclick="existingEtherAddress();" id="radioExistingAddress">
+                    <label class="form-check-label" for="radioExistingAddress">
+                        Use an <strong>existing Ethereum address</strong>
+                    </label>
+                </div>
+
+                <div id="useExistingAddress" class="ms-3" style="display: none">
+                    If you already have an existing Ethereum address, use this address to make it the owner of your
+                    NFT.<br>
+                    Make sure that you have access to this address, otherwise you won't be able to
+                    trade/sell/transfer your NFT in the future.
+
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">Ethereum address</span>
+                        </div>
+                        <input type="text" class="form-control" th:field="*{address}" id="addressField"
+                               name="address" aria-describedby="basic-addon5">
+                    </div>
+                    <button type="button" class="btn btn-secondary btn-sm mt-1" id="metamaskButton"
+                            onclick="getMetamaskAddress()"><img width="20px" src="/assets/img/outlink_metamask.svg"> Get
+                        Address from your MetaMask wallet
+                    </button>
+                </div>
+                <div class="alert alert-warning" role="alert" th:if="${#fields.hasErrors('address')}"
+                     th:errors="*{address}">Address error error
+                </div>
+
+
+                <div class="row mt-4">
+                    <div class="d-flex">
+                        <h3>Terms and Conditions</h3>
+                    </div>
+                </div>
+
+                <div class="input-group row">
+                    <div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="tosCheck" required="false">
+                            <label class="form-check-label" for="tosCheck">
+                                I have read and I agree to the <a href="/tos" target="_blank">terms of service</a>
+                            </label>
+                            <div class="invalid-feedback">
+                                You must agree before submitting.
+                            </div>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" value="" id="copyrightCheck"
+                                   required="false">
+                            <label class="form-check-label" for="copyrightCheck">
+                                I confirm that I hold full copyright ownership of the submitted digital asset (or have
+                                sufficient permission by the owner to use the asset).
+                            </label>
+                            <div class="invalid-feedback">
+                                You must agree before submitting.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="d-flex">
+                        <h3>Add your Email address</h3>
+                    </div>
+                </div>
+                <div class="input-group row">
+                    <div>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" th:field="*{email}" id="floatingInput"
+                                   placeholder="name@example.com">
+                            <label for="floatingInput">Email address</label>
+                        </div>
+                        <div class="alert alert-warning" role="alert" th:if="${#fields.hasErrors('email')}"
+                             th:errors="*{email}">Address error error
+                        </div>
+                        <p>Adding your email is optional. Your email will not be made public and will only be used in
+                            case of questions regarding your NFT.</p>
+                    </div>
+                </div>
+
+
+                <div class="mt-5">
+                    <button form="uploadform" class="btn btn-primary" type="submit">Next</button>
+                </div>
+            </form>
+
+
+            <!-- Modal -->
+            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Accepted File types</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h6>Images, Drawings and Animations</h6>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">File Format</th>
+                                    <th scope="col">Media type</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">GIF</th>
+                                    <td>image/gif</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">JPG</th>
+                                    <td>image/jpeg</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">PNG</th>
+                                    <td>image/png</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">SVG</th>
+                                    <td>image/svg</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <h6>Video</h6>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">File Format</th>
+                                    <th scope="col">Media type</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">MP4</th>
+                                    <td>video/mp4</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">WebM</th>
+                                    <td>video/webm</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Ogg</th>
+                                    <td>video/ogg</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <h6>Audio</h6>
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">File Format</th>
+                                    <th scope="col">Media type</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">MP3</th>
+                                    <td>audio/mpeg</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">Ogg</th>
+                                    <td>audio/ogg</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">WAV</th>
+                                    <td>audio/wav</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+</body>
+
+<script>
+    function onLoad() {
+        if (typeof window.ethereum !== 'undefined') { //metamask installed
+            document.getElementById('metamasksuggestion').style.display = 'none';
+            document.getElementById('radioExistingAddress').checked = true;
+            existingEtherAddress();
+        } else { //metamask not installed
+            document.getElementById('metamaskButton').style.display = 'none';
+        }
+
+    }
+
+    async function getMetamaskAddress() {
+        if (typeof window.ethereum !== 'undefined') { //metamask installed
+            const accounts = await ethereum.request({method: 'eth_requestAccounts'});
+            document.getElementById('addressField').value = accounts[0];
+        }
+    }
+
+
+    function existingEtherAddress() {
+        if (document.getElementById('radioExistingAddress').checked) {
+            document.getElementById('useNewAddress').style.display = 'none';
+            document.getElementById('useExistingAddress').style.display = 'block';
+        } else {
+            document.getElementById('useNewAddress').style.display = 'block';
+            document.getElementById('useExistingAddress').style.display = 'none';
+            document.getElementById('addressField').value = '';
+        }
+    }
+
+    var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popover"]'))
+    var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
+        return new bootstrap.Popover(popoverTriggerEl)
+    })
+
+    function dropHandler(ev) {
+        ev.preventDefault();
+        var formData = new FormData(document.getElementById('uploadform'));
+        document.getElementById('uploadfile').files = ev.dataTransfer.files;
+    }
+
+    function dropclick() {
+        document.getElementById('uploadfile').click();
+    }
+
+    function dragOverHandler(ev) {
+        ev.preventDefault();
+    }
+
+    new Vue({
+        el: '#app',
+        data() {
+            return {
+                cost: null,
+                update: null,
+                validPrice: true,
+                loading: true,
+                errored: false
+            }
+        },
+        create() {
+            this.timer = setInterval(this.fetchEventsList, 300000);
+        },
+        methods: {
+            getData: function () {
+                axios
+                    .get('/mintingcost')
+                    .then(response => {
+                        this.cost = response.data.mintingCost;
+                        this.update = new Date(response.data.lastUpdate).toLocaleTimeString();
+                        this.validPrice = response.data.valid;
+                    })
+                    .catch(error => {
+                        this.errored = true
+                        this.cost = "Cannot load data"
+                    })
+                    .finally(() => this.loading = false)
+            }
+        },
+        mounted() {
+            this.getData();
+            this.timer = setInterval(this.getData, 60000);
+        }
+    })
+</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GV36YE0WSV"></script>
+<script th:unless="${#arrays.contains(@environment.getActiveProfiles(),'dev')}">
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-GV36YE0WSV');
+</script>
+
+</html>

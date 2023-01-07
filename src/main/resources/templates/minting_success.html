@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      lang="en">
+
+<head th:replace="index.html :: header"></head>
+<body>
+<header th:replace="index.html :: headerfiles">
+</header>
+
+<script src="/assets/js/qrcode.min.js"></script>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="index.html :: navigation(field='create')" id="sidebarMenu"
+             class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h1">You have successfully created your NFT!!</h1>
+            </div>
+            <div class="card" style="width: 40rem;">
+                <h5 class="card-title" th:text="${name}">Name</h5>
+                <div class="card-header">
+                    View your NFT
+                </div>
+                <ul class="list-group list-group-flush">
+                    <div class="list-group-item"><a th:href="'https://nuftu.com/nft/'+${token}"
+                                                    th:text="'https://nuftu.com/nft/'+${token}"></a></div>
+                </ul>
+                <div class="card-header">
+                    NFT Address on the Ethereum Blockchain
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" th:text="${contractaddress}+'::'+${token}">An item</li>
+                </ul>
+                <div class="card-header">
+                    Creator (Ethereum address)
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li th:if="${newkeycreated}" class="list-group-item"
+                        th:utext="${address}+'<br><i>This address was created specifically for your NFT</i>'">An item
+                    </li>
+                    <li th:unless="${newkeycreated}" class="list-group-item"
+                        th:utext="${address}+'<br><i>This address was supplied by the user</i>'">An item
+                    </li>
+                </ul>
+
+
+                <div th:if="${newkeycreated}">
+                    <div class="card-header">
+                        Your private Key <span class="badge bg-danger">Top secret</span>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" th:text="${privatekey}">An item</li>
+                    </ul>
+                    <div id="qrcode"></div>
+                    <div class="alert alert-danger mt-2" role="alert" style="width: 40rem;">
+                        <img width="20px" src="/assets/img/warning.svg">
+                        This is your last chance to write down your private key.<br>
+                        Your private key is the only way to trade/sell/delete your token.<br>
+                        <strong>Print it out, store it in a safe place.</strong>
+                    </div>
+                </div>
+            </div>
+            <a class="btn btn-primary mt-5" id="printButton">Print this page</a>
+            <a class="btn btn-success mt-5 ms-5" href="create?action=discard">Create your next NFT</a>
+
+        </main>
+    </div>
+</div>
+</body>
+
+<script>
+    var qrcode = new QRCode("qrcode");
+    qrcode.makeCode("[[${privatekey}]]");
+
+    var button = document.getElementById('printButton')
+    button.addEventListener('click', printButton, false);
+
+    function printButton() {
+        window.print();
+    }
+
+</script>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GV36YE0WSV"></script>
+<script th:unless="${#arrays.contains(@environment.getActiveProfiles(),'dev')}">
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'G-GV36YE0WSV');
+    gtag('event', 'minting_success');
+</script>
+
+</html>

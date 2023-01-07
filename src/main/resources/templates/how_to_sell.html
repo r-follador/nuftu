@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      lang="en">
+
+<head th:replace="index.html :: header"></head>
+<body>
+<header th:replace="index.html :: headerfiles">
+</header>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="index.html :: navigation(field='how_to_sell')" id="sidebarMenu"
+             class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h1">How to trade and sell your NFT</h1>
+            </div>
+            <img src="/assets/img/002.svg" class="col-5 float-end">
+
+            <h3 class="mt-3">Exhibit your NFT</h3>
+            <p>
+                Show your NFT off to the World!<br>
+                After minting your NFT, it will be showcased on Nuftu (you will receive a link similar to <a
+                    href="https://nuftu.com/nft/0">https://nuftu.com/nft/0</a>).
+                Link your NFT on your virtual and real life social network, spread the word.
+            </p>
+
+            <h3 class="mt-3">Sell your NFT</h3>
+            <p>
+                You can sell and auction your NFT on any Ethereum compatible market place. The most popular <strong>NFT
+                marketplace</strong> is OpenSea and Nuftu
+                fully supports its integration.
+            </p>
+            <p>
+                On your Nuftu NFT page, click at the bottom on the OpenSea link. This will open your NFT on OpenSea, a
+                popular marketplace for NFTs.<br>
+                To be able to put your NFT on sale at OpenSea, you need to follow a couple of steps:
+            <ul>
+                <li>If you have not done so, install <a href="https://metamask.io" target="_blank">MetaMask</a> in your
+                    browser.<br>
+                    MetaMask manages your private key in a safe way and helps to identify you as the owner on OpenSea.
+                    After installation, <a target="_blank"
+                                           href="https://metamask.zendesk.com/hc/en-us/articles/360015489331-How-to-import-an-Account">see
+                        here on how to add your private key to MetaMask</a>.<br>
+                    If you do not have a private key yet, one will automatically be generated for you while minting your
+                    NFT.
+                </li>
+                <li>Go to OpenSea's listing of your NFT<br>
+                    The link at the bottom your NFT on Nuftu will take you directly there.
+                </li>
+                <li>Click on the Sell button and follow the instructions.<br>
+                    You can choose to sell your NFT for a fixed price or auction it off.
+                </li>
+            </ul>
+            <span class="badge bg-warning text-dark">Note</span> You will need to add Ether to your account to pay for
+            the gas price for successful sales. <a
+                href="https://opensea.io/blog/tutorials/sell-your-crypto-collectibles-without-paying-gas/"
+                target="_blank">See here for more details on how this works.</a>
+            </p>
+
+        </main>
+    </div>
+</div>
+</body>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GV36YE0WSV"></script>
+<script th:unless="${#arrays.contains(@environment.getActiveProfiles(),'dev')}">
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-GV36YE0WSV');
+</script>
+
+</html>

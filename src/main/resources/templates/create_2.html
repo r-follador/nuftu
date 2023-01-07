@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      lang="en">
+
+<head th:replace="index.html :: header"></head>
+<body>
+<header th:replace="index.html :: headerfiles">
+</header>
+
+<div class="container-fluid">
+    <div class="row">
+        <nav th:replace="index.html :: navigation(field='create')" id="sidebarMenu"
+             class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+        </nav>
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                <h1 class="h1">Create your NFT</h1>
+            </div>
+
+            <h3>Verify your NFT</h3>
+
+            <div class="card" style="width: 800px">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${name}">Name</h5>
+                    <h6 class="card-subtitle mb-2 text-muted" th:text="'File type: '+${mimetype}">File type</h6>
+                    <h6 class="card-subtitle mb-2 text-muted" th:text="'SHA256 Hash: '+${sha256}">Sha256 Hash</h6>
+                    <p class="card-text" th:text="${description}">Description</p>
+
+                    <div th:if="${#strings.startsWith(mimetype,'image')}">
+                        <img width="500" class="img-fluid" src="create2_file">
+                    </div>
+
+                    <div th:if="${#strings.startsWith(mimetype,'application/pdf')}">
+                        <embed src="create2_file" class="img-fluid"
+                               type="application/pdf">
+                    </div>
+
+                    <div th:if="${#strings.startsWith(mimetype,'video')}">
+                        <video width="500" autoplay muted>
+                            <source src="create2_file" th:type="${mimetype}">
+                        </video>
+                    </div>
+
+                    <div th:if="${#strings.startsWith(mimetype,'audio')}">
+                        <audio width="500" controls
+                               src="create2_file">
+                        </audio>
+                    </div>
+                </div>
+            </div>
+
+
+            <p></p>
+            <a class="btn btn-secondary" href="create?action=discard">Discard</a>
+            <a class="btn btn-success" href="create?action=confirm">Confirm</a>
+
+        </main>
+    </div>
+</div>
+</body>
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GV36YE0WSV"></script>
+<script th:unless="${#arrays.contains(@environment.getActiveProfiles(),'dev')}">
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+        dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+    gtag('config', 'G-GV36YE0WSV');
+    gtag('event', 'upload_success');
+</script>
+
+</html>
